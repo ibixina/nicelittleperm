@@ -382,8 +382,8 @@
 
     async function openPanel(title, filePath) {
       // Don't open duplicates
-      if (panels.find(p => p.path === filePath)) {
-        expandPanel(panels.findIndex(p => p.path === filePath));
+      if (panels.find(p => p && p.path === filePath)) {
+        expandPanel(panels.findIndex(p => p && p.path === filePath));
         return;
       }
 
