@@ -1,0 +1,15 @@
+[
+  {
+    "name": "writings",
+    "items": [
+      {
+        "title": "letteroflastresort",
+        "path": "writings/letteroflastresort.md"
+      },
+      {
+        "title": "newcombsparadox",
+        "path": "writings/newcombsparadox.md"
+      }
+    ]
+  }
+]
