@@ -3,6 +3,10 @@
     "name": "writings",
     "items": [
       {
+        "title": "iteration",
+        "path": "writings/iteration.md"
+      },
+      {
         "title": "letteroflastresort",
         "path": "writings/letteroflastresort.md"
       },
