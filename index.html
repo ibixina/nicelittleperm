@@ -1,361 +1,371 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>nicelittleperm</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
+            rel="stylesheet"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>nicelittleperm</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
-    rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+            body {
+                font-family: "EB Garamond", Georgia, serif;
+                background: #faf9f6;
+                color: #2c2c2c;
+                min-height: 100vh;
+                overflow: hidden;
+            }
 
-    body {
-      font-family: 'EB Garamond', Georgia, serif;
-      background: #faf9f6;
-      color: #2c2c2c;
-      min-height: 100vh;
-      overflow: hidden;
-    }
+            .container {
+                display: flex;
+                height: 100vh;
+                transition: all 0.4s ease;
+            }
 
-    .container {
-      display: flex;
-      height: 100vh;
-      transition: all 0.4s ease;
-    }
+            /* --- Left: navigation --- */
+            .nav-pane {
+                flex: 1;
+                padding: 60px 40px;
+                overflow-y: auto;
+                transition: flex 0.4s ease;
+                min-width: 0;
+            }
 
-    /* --- Left: navigation --- */
-    .nav-pane {
-      flex: 1;
-      padding: 60px 40px;
-      overflow-y: auto;
-      transition: flex 0.4s ease;
-      min-width: 0;
-    }
+            .nav-pane.shrunk {
+                flex: 0 0 320px;
+                min-width: 320px;
+            }
 
-    .nav-pane.shrunk {
-      flex: 0 0 320px;
-      min-width: 320px;
-    }
+            h1 {
+                font-size: 2.4rem;
+                font-weight: 400;
+                letter-spacing: 1.5px;
+                margin-bottom: 48px;
+                color: #1a1a1a;
+            }
 
-    h1 {
-      font-size: 2.4rem;
-      font-weight: 400;
-      letter-spacing: 1.5px;
-      margin-bottom: 48px;
-      color: #1a1a1a;
-    }
+            .folder {
+                margin-bottom: 4px;
+            }
 
-    .folder {
-      margin-bottom: 4px;
-    }
+            .folder-header {
+                cursor: pointer;
+                padding: 14px 0;
+                border-bottom: 1px solid #e8e4df;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: 1.25rem;
+                letter-spacing: 0.5px;
+                color: #3a3a3a;
+                user-select: none;
+                transition: color 0.2s;
+            }
 
-    .folder-header {
-      cursor: pointer;
-      padding: 14px 0;
-      border-bottom: 1px solid #e8e4df;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 1.25rem;
-      letter-spacing: 0.5px;
-      color: #3a3a3a;
-      user-select: none;
-      transition: color 0.2s;
-    }
+            .folder-header:hover {
+                color: #000;
+            }
 
-    .folder-header:hover {
-      color: #000;
-    }
+            .folder-arrow {
+                font-size: 0.6rem;
+                transition: transform 0.3s ease;
+                color: #aaa;
+            }
 
-    .folder-arrow {
-      font-size: 0.6rem;
-      transition: transform 0.3s ease;
-      color: #aaa;
-    }
+            .folder-header.expanded .folder-arrow {
+                transform: rotate(90deg);
+            }
 
-    .folder-header.expanded .folder-arrow {
-      transform: rotate(90deg);
-    }
+            .folder-contents {
+                overflow: hidden;
+                max-height: 0;
+                transition: max-height 0.4s ease;
+            }
 
-    .folder-contents {
-      overflow: hidden;
-      max-height: 0;
-      transition: max-height 0.4s ease;
-    }
+            .folder-contents.show {
+                max-height: 2000px;
+            }
 
-    .folder-contents.show {
-      max-height: 2000px;
-    }
+            .file-list {
+                list-style: none;
+                padding: 8px 0 12px 20px;
+            }
 
-    .file-list {
-      list-style: none;
-      padding: 8px 0 12px 20px;
-    }
+            .file-list li {
+                padding: 6px 0;
+            }
 
-    .file-list li {
-      padding: 6px 0;
-    }
+            .file-link {
+                color: #666;
+                text-decoration: none;
+                font-size: 1.05rem;
+                cursor: pointer;
+                transition: color 0.2s;
+            }
 
-    .file-link {
-      color: #666;
-      text-decoration: none;
-      font-size: 1.05rem;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
+            .file-link:hover {
+                color: #1a1a1a;
+                text-decoration: underline;
+            }
 
-    .file-link:hover {
-      color: #1a1a1a;
-      text-decoration: underline;
-    }
+            /* --- Right: reading panels --- */
+            .panels {
+                display: flex;
+                flex-direction: row;
+                width: 0;
+                overflow: hidden;
+                transition:
+                    width 0.4s ease,
+                    flex 0.4s ease;
+            }
 
-    /* --- Right: reading panels --- */
-    .panels {
-      display: flex;
-      flex-direction: row;
-      width: 0;
-      overflow: hidden;
-      transition: width 0.4s ease, flex 0.4s ease;
-    }
+            .panels.open {
+                flex: 1;
+                width: auto;
+                overflow: hidden;
+            }
 
-    .panels.open {
-      flex: 1;
-      width: auto;
-      overflow: hidden;
-    }
+            .panel {
+                border-left: 1px solid #e0ddd8;
+                background: #fff;
+                overflow: hidden;
+                display: flex;
+                flex-direction: row;
+                transition:
+                    flex 0.4s ease,
+                    min-width 0.4s ease;
+                min-width: 0;
+                height: 100%;
+            }
 
-    .panel {
-      border-left: 1px solid #e0ddd8;
-      background: #fff;
-      overflow: hidden;
-      display: flex;
-      flex-direction: row;
-      transition: flex 0.4s ease, min-width 0.4s ease;
-      min-width: 0;
-      height: 100%;
-    }
+            /* Collapsed panel: just a clickable header strip */
+            .panel.collapsed {
+                flex: 0 0 42px;
+                min-width: 42px;
+                cursor: pointer;
+            }
 
-    /* Collapsed panel: just a clickable header strip */
-    .panel.collapsed {
-      flex: 0 0 42px;
-      min-width: 42px;
-      cursor: pointer;
-    }
+            .panel.collapsed:hover {
+                background: #f8f7f4;
+            }
 
-    .panel.collapsed:hover {
-      background: #f8f7f4;
-    }
+            /* Expanded panel: takes remaining space */
+            .panel.expanded {
+                flex: 10;
+                min-width: 400px;
+            }
 
-    /* Expanded panel: takes remaining space */
-    .panel.expanded {
-      flex: 10;
-      min-width: 400px;
-    }
+            .panel-header {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-between;
+                padding: 24px 8px;
+                border-right: 1px solid #eee;
+                font-size: 1rem;
+                color: #666;
+                user-select: none;
+                flex-shrink: 0;
+                width: 42px;
+                background: #fdfdfb;
+            }
 
-    .panel-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: 24px 8px;
-      border-right: 1px solid #eee;
-      font-size: 1rem;
-      color: #666;
-      user-select: none;
-      flex-shrink: 0;
-      width: 42px;
-      background: #fdfdfb;
-    }
+            .panel.expanded .panel-header {
+                background: #fff;
+            }
 
-    .panel.expanded .panel-header {
-      background: #fff;
-    }
+            .panel-title {
+                writing-mode: vertical-rl;
+                transform: rotate(180deg);
+                white-space: nowrap;
+                letter-spacing: 0.5px;
+                margin-top: 10px;
+            }
 
-    .panel-title {
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      white-space: nowrap;
-      letter-spacing: 0.5px;
-      margin-top: 10px;
-    }
+            .panel.expanded .panel-title {
+                color: #1a1a1a;
+                font-weight: 600;
+            }
 
-    .panel.expanded .panel-title {
-      color: #1a1a1a;
-      font-weight: 600;
-    }
+            .panel-close {
+                cursor: pointer;
+                color: #bbb;
+                font-size: 1.1rem;
+                transition: color 0.2s;
+                background: none;
+                border: none;
+                font-family: inherit;
+                padding: 5px;
+                margin-bottom: 5px;
+            }
 
-    .panel-close {
-      cursor: pointer;
-      color: #bbb;
-      font-size: 1.1rem;
-      transition: color 0.2s;
-      background: none;
-      border: none;
-      font-family: inherit;
-      padding: 5px;
-      margin-bottom: 5px;
-    }
+            .panel-close:hover {
+                color: #333;
+            }
 
-    .panel-close:hover {
-      color: #333;
-    }
+            .panel-body {
+                flex: 1;
+                overflow-y: auto;
+                padding: 40px 60px 120px;
+            }
 
-    .panel-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 40px 60px 120px;
-    }
+            .panel.collapsed .panel-body {
+                display: none;
+            }
 
-    .panel.collapsed .panel-body {
-      display: none;
-    }
+            /* Markdown content styles */
+            .panel-body h1,
+            .panel-body h2,
+            .panel-body h3 {
+                margin: 1.2em 0 0.6em;
+                font-weight: 600;
+                color: #1a1a1a;
+            }
 
-    /* Markdown content styles */
-    .panel-body h1,
-    .panel-body h2,
-    .panel-body h3 {
-      margin: 1.2em 0 0.6em;
-      font-weight: 600;
-      color: #1a1a1a;
-    }
+            .panel-body h1 {
+                font-size: 1.6rem;
+            }
 
-    .panel-body h1 {
-      font-size: 1.6rem;
-    }
+            .panel-body h2 {
+                font-size: 1.35rem;
+            }
 
-    .panel-body h2 {
-      font-size: 1.35rem;
-    }
+            .panel-body h3 {
+                font-size: 1.15rem;
+            }
 
-    .panel-body h3 {
-      font-size: 1.15rem;
-    }
+            .panel-body p {
+                line-height: 1.85;
+                margin-bottom: 1.2em;
+                font-size: 1.08rem;
+                color: #333;
+            }
 
-    .panel-body p {
-      line-height: 1.85;
-      margin-bottom: 1.2em;
-      font-size: 1.08rem;
-      color: #333;
-    }
+            .panel-body blockquote {
+                border-left: 2px solid #ccc;
+                padding-left: 16px;
+                margin: 1.2em 0;
+                color: #666;
+                font-style: italic;
+            }
 
-    .panel-body blockquote {
-      border-left: 2px solid #ccc;
-      padding-left: 16px;
-      margin: 1.2em 0;
-      color: #666;
-      font-style: italic;
-    }
+            .panel-body ul,
+            .panel-body ol {
+                padding-left: 24px;
+                margin-bottom: 1.2em;
+            }
 
-    .panel-body ul,
-    .panel-body ol {
-      padding-left: 24px;
-      margin-bottom: 1.2em;
-    }
+            .panel-body li {
+                line-height: 1.8;
+                margin-bottom: 0.3em;
+            }
 
-    .panel-body li {
-      line-height: 1.8;
-      margin-bottom: 0.3em;
-    }
+            .panel-body a {
+                color: #555;
+                text-decoration: underline;
+            }
 
-    .panel-body a {
-      color: #555;
-      text-decoration: underline;
-    }
+            .panel-body code {
+                background: #f0ede8;
+                padding: 2px 6px;
+                border-radius: 3px;
+                font-size: 0.92em;
+            }
 
-    .panel-body code {
-      background: #f0ede8;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-size: 0.92em;
-    }
+            .panel-body pre {
+                background: #f0ede8;
+                padding: 16px;
+                border-radius: 4px;
+                overflow-x: auto;
+                margin-bottom: 1.2em;
+            }
 
-    .panel-body pre {
-      background: #f0ede8;
-      padding: 16px;
-      border-radius: 4px;
-      overflow-x: auto;
-      margin-bottom: 1.2em;
-    }
+            .panel-body pre code {
+                background: none;
+                padding: 0;
+            }
 
-    .panel-body pre code {
-      background: none;
-      padding: 0;
-    }
+            .panel-body hr {
+                border: none;
+                border-top: 1px solid #e0ddd8;
+                margin: 2em 0;
+            }
 
-    .panel-body hr {
-      border: none;
-      border-top: 1px solid #e0ddd8;
-      margin: 2em 0;
-    }
+            .loading-text {
+                color: #aaa;
+                font-style: italic;
+            }
 
-    .loading-text {
-      color: #aaa;
-      font-style: italic;
-    }
+            @media (max-width: 768px) {
+                .container {
+                    flex-direction: column;
+                }
 
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
+                .nav-pane {
+                    padding: 32px 20px;
+                }
 
-      .nav-pane {
-        padding: 32px 20px;
-      }
+                .nav-pane.shrunk {
+                    flex: 0 0 auto;
+                    min-width: unset;
+                    max-height: 40vh;
+                }
 
-      .nav-pane.shrunk {
-        flex: 0 0 auto;
-        min-width: unset;
-        max-height: 40vh;
-      }
+                .panels.open {
+                    width: 100%;
+                }
 
-      .panels.open {
-        width: 100%;
-      }
+                .panel-body {
+                    padding: 24px 20px 40px;
+                }
+            }
+        </style>
+    </head>
 
-      .panel-body {
-        padding: 24px 20px 40px;
-      }
-    }
-  </style>
-</head>
+    <body>
+        <div class="container">
+            <div class="nav-pane" id="navPane">
+                <h1>⊓ǀ⊂Ξ⌊ǀ⊺⊺⌊Ξ☧ΞⱤ⋈</h1>
+                <div id="folders">
+                    <span class="loading-text">Loading…</span>
+                </div>
+            </div>
+            <div class="panels" id="panels"></div>
+        </div>
 
-<body>
-  <div class="container">
-    <div class="nav-pane" id="navPane">
-      <h1>nicelittleperm</h1>
-      <div id="folders"><span class="loading-text">Loading…</span></div>
-    </div>
-    <div class="panels" id="panels"></div>
-  </div>
+        <script>
+            const panels = [];
 
-  <script>
-    const panels = [];
+            async function init() {
+                try {
+                    const res = await fetch("content.json");
+                    const folders = await res.json();
+                    render(folders);
+                } catch {
+                    document.getElementById("folders").innerHTML =
+                        '<span class="loading-text">Could not load content.</span>';
+                }
+            }
 
-    async function init() {
-      try {
-        const res = await fetch('content.json');
-        const folders = await res.json();
-        render(folders);
-      } catch {
-        document.getElementById('folders').innerHTML =
-          '<span class="loading-text">Could not load content.</span>';
-      }
-    }
-
-    function render(folders) {
-      const el = document.getElementById('folders');
-      if (!folders.length) {
-        el.innerHTML = '<span class="loading-text">No folders found.</span>';
-        return;
-      }
-      el.innerHTML = folders.map((folder, fi) => `
+            function render(folders) {
+                const el = document.getElementById("folders");
+                if (!folders.length) {
+                    el.innerHTML =
+                        '<span class="loading-text">No folders found.</span>';
+                    return;
+                }
+                el.innerHTML = folders
+                    .map(
+                        (folder, fi) => `
         <div class="folder">
           <div class="folder-header" onclick="toggleFolder(${fi})">
             ${folder.name}
@@ -363,52 +373,60 @@
           </div>
           <div class="folder-contents" id="fc-${fi}">
             <ul class="file-list">
-              ${folder.items.map((item, ii) => `
+              ${folder.items
+                  .map(
+                      (item, ii) => `
                 <li><a class="file-link"
                   onclick="openPanel('${item.title}', '${item.path}')">${item.title}</a></li>
-              `).join('')}
+              `,
+                  )
+                  .join("")}
             </ul>
           </div>
         </div>
-      `).join('');
-    }
+      `,
+                    )
+                    .join("");
+            }
 
-    function toggleFolder(fi) {
-      const header = document.querySelectorAll('.folder-header')[fi];
-      const contents = document.getElementById(`fc-${fi}`);
-      header.classList.toggle('expanded');
-      contents.classList.toggle('show');
-    }
+            function toggleFolder(fi) {
+                const header = document.querySelectorAll(".folder-header")[fi];
+                const contents = document.getElementById(`fc-${fi}`);
+                header.classList.toggle("expanded");
+                contents.classList.toggle("show");
+            }
 
-    async function openPanel(title, filePath) {
-      // Don't open duplicates
-      if (panels.find(p => p && p.path === filePath)) {
-        expandPanel(panels.findIndex(p => p && p.path === filePath));
-        return;
-      }
+            async function openPanel(title, filePath) {
+                // Don't open duplicates
+                if (panels.find((p) => p && p.path === filePath)) {
+                    expandPanel(
+                        panels.findIndex((p) => p && p.path === filePath),
+                    );
+                    return;
+                }
 
-      const navPane = document.getElementById('navPane');
-      const panelsEl = document.getElementById('panels');
+                const navPane = document.getElementById("navPane");
+                const panelsEl = document.getElementById("panels");
 
-      navPane.classList.add('shrunk');
-      panelsEl.classList.add('open');
+                navPane.classList.add("shrunk");
+                panelsEl.classList.add("open");
 
-      // Collapse all existing panels before opening new one
-      panels.forEach((_, i) => {
-        const el = document.getElementById(`panel-${i}`);
-        if (el) {
-          el.classList.remove('expanded');
-          el.classList.add('collapsed');
-        }
-      });
+                // Collapse all existing panels before opening new one
+                panels.forEach((_, i) => {
+                    const el = document.getElementById(`panel-${i}`);
+                    if (el) {
+                        el.classList.remove("expanded");
+                        el.classList.add("collapsed");
+                    }
+                });
 
-      const idx = panels.length;
-      panels.push({ title, path: filePath, loaded: false });
+                const idx = panels.length;
+                panels.push({ title, path: filePath, loaded: false });
 
-      const panelEl = document.createElement('div');
-      panelEl.className = 'panel expanded';
-      panelEl.id = `panel-${idx}`;
-      panelEl.innerHTML = `
+                const panelEl = document.createElement("div");
+                panelEl.className = "panel expanded";
+                panelEl.id = `panel-${idx}`;
+                panelEl.innerHTML = `
         <div class="panel-header" onclick="togglePanel(${idx})">
           <span class="panel-title">${title}</span>
           <button class="panel-close" onclick="event.stopPropagation(); removePanel(${idx})">✕</button>
@@ -417,46 +435,48 @@
           <span class="loading-text">Loading…</span>
         </div>
       `;
-      panelsEl.appendChild(panelEl);
+                panelsEl.appendChild(panelEl);
 
-      try {
-        const res = await fetch(filePath);
-        const md = await res.text();
-        document.getElementById(`panel-body-${idx}`).innerHTML = marked.parse(md);
-        panels[idx].loaded = true;
-      } catch {
-        document.getElementById(`panel-body-${idx}`).innerHTML =
-          '<span class="loading-text">Failed to load.</span>';
-      }
-    }
+                try {
+                    const res = await fetch(filePath);
+                    const md = await res.text();
+                    document.getElementById(`panel-body-${idx}`).innerHTML =
+                        marked.parse(md);
+                    panels[idx].loaded = true;
+                } catch {
+                    document.getElementById(`panel-body-${idx}`).innerHTML =
+                        '<span class="loading-text">Failed to load.</span>';
+                }
+            }
 
-    function togglePanel(idx) {
-      const el = document.getElementById(`panel-${idx}`);
-      if (!el) return;
-      if (el.classList.contains('expanded')) {
-        el.classList.remove('expanded');
-        el.classList.add('collapsed');
-      } else {
-        el.classList.remove('collapsed');
-        el.classList.add('expanded');
-      }
-    }
+            function togglePanel(idx) {
+                const el = document.getElementById(`panel-${idx}`);
+                if (!el) return;
+                if (el.classList.contains("expanded")) {
+                    el.classList.remove("expanded");
+                    el.classList.add("collapsed");
+                } else {
+                    el.classList.remove("collapsed");
+                    el.classList.add("expanded");
+                }
+            }
 
-    function removePanel(idx) {
-      const el = document.getElementById(`panel-${idx}`);
-      if (el) el.remove();
-      panels[idx] = null;
+            function removePanel(idx) {
+                const el = document.getElementById(`panel-${idx}`);
+                if (el) el.remove();
+                panels[idx] = null;
 
-      // If no panels left, restore nav
-      const hasActive = panels.some(p => p !== null);
-      if (!hasActive) {
-        document.getElementById('navPane').classList.remove('shrunk');
-        document.getElementById('panels').classList.remove('open');
-      }
-    }
+                // If no panels left, restore nav
+                const hasActive = panels.some((p) => p !== null);
+                if (!hasActive) {
+                    document
+                        .getElementById("navPane")
+                        .classList.remove("shrunk");
+                    document.getElementById("panels").classList.remove("open");
+                }
+            }
 
-    init();
-  </script>
-</body>
-
+            init();
+        </script>
+    </body>
 </html>
