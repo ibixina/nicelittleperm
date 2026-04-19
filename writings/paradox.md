@@ -1,0 +1,4 @@
+- Paradoxes cannot exist in the physical world.
+- They are an error in our thinking or language.
+- Language doesn't have physical constraints. All paradoxes are just mental phenomenon which results from syntactic errors in the language
+- The other way they are arise is due to incomplete data or flawed understanding of the data
