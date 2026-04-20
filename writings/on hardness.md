@@ -1,0 +1,1 @@
+/home/nao/Documents/Obsidian/on hardness.md
